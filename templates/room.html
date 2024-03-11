@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room {{ room_id }}</title>
+</head>
+<body>
+<h1>Room {{ room_id }}</h1>
+<button onclick="joinRoom()">Join Room</button>
+<button onclick="leaveRoom()">Leave Room</button>
+<button onclick="startSharing()">Start Sharing</button>
+<button onclick="stopSharing()">Stop Sharing</button>
+
+<div id="screenContainer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+    function joinRoom() {
+        var room_id = "{{ room_id }}";
+        socket.emit('join_room', {'room_id': room_id});
+    }
+
+    function leaveRoom() {
+        var room_id = "{{ room_id }}";
+        socket.emit('leave_room', {'room_id': room_id});
+    }
+
+    function startSharing() {
+        var room_id = "{{ room_id }}";
+        var frame_rate = 1;  // 设置帧刷新率
+        var screen_area = [0, 0, window.innerWidth, window.innerHeight];  // 设置屏幕范围
+
+        socket.emit('share_screen', {'room_id': room_id, 'frame_rate': frame_rate, 'screen_area': screen_area});
+    }
+
+    function stopSharing() {
+        var room_id = "{{ room_id }}";
+        socket.emit('stop_sharing', {'room_id': room_id});
+    }
+
+    socket.on('joined_room', function (data) {
+        console.log('Joined room: ' + data.room_id);
+    });
+
+    socket.on('left_room', function (data) {
+        console.log('Left room: ' + data.room_id);
+    });
+
+    socket.on('update_screen', function (data) {
+        console.log('update_screen room: ' + data.room_id);
+        var image_data = data.image_data;
+        document.getElementById('screenContainer').innerHTML = '<img src="data:image/png;base64,' + image_data + '" />';
+    });
+</script>
+</body>
+</html>
