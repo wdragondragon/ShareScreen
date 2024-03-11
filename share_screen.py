@@ -7,7 +7,7 @@ from PIL import Image
 from mss import mss
 import socketio
 
-SERVER_URL = "http://localhost:10551"  # 更新为你的服务器地址
+SERVER_URL = "http://1.15.138.227:10551"  # 更新为你的服务器地址
 sio = socketio.Client()
 
 
@@ -50,4 +50,5 @@ if __name__ == '__main__':
     room_id = "1"  # 更新为实际的房间号
     frame_rate = 10  # 更新为实际的帧刷新率
     screen_area = {'left': 1280, 'top': 720, 'width': 640, 'height': 640}  # 更新为实际的屏幕区域
+    # screen_area = {'left': 0, 'top': 0, 'width': 2560, 'height': 1440}  # 更新为实际的屏幕区域
     capture_and_upload(room_id, frame_rate, screen_area)
